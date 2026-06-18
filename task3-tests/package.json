@@ -1,0 +1,11 @@
+{
+  "name": "task3-tests",
+  "version": "1.0.0",
+  "description": "Unit-тести на Jest для функції calculateDiscount",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

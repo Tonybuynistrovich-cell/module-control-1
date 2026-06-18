@@ -1,0 +1,41 @@
+# Піднімає сервіс застосунку разом із базою даних PostgreSQL.
+# Дані БД зберігаються у named volume, щоб переживати перезапуск контейнерів.
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: task1_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      # Рядок підключення до БД. Хост = ім'я сервісу `db` у мережі compose.
+      DATABASE_URL: postgres://app_user:app_password@db:5432/app_db
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    container_name: task1_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password
+      POSTGRES_DB: app_db
+    volumes:
+      # Named volume для постійного зберігання даних PostgreSQL.
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      # app стартує лише після того, як БД готова приймати з'єднання.
+      test: ["CMD-SHELL", "pg_isready -U app_user -d app_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pg_data:

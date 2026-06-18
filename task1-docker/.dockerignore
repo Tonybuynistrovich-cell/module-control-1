@@ -1,0 +1,14 @@
+# Виключаємо файли з контексту збірки, щоб вони не потрапили в образ
+# і не сповільнювали build.
+node_modules
+npm-debug.log
+.git
+.gitignore
+.env
+*.md
+Dockerfile
+docker-compose.yml
+.dockerignore
+coverage
+.vscode
+.idea
